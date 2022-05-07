@@ -5,7 +5,7 @@ from google.cloud import bigquery
 
 BQ_CLIENT = bigquery.Client()
 
-DATASET = "Callio"
+DATASET = "Xero"
 
 
 def get_last_timestamp(table: str, cursor_key: str) -> datetime:
