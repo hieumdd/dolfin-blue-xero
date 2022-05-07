@@ -35,6 +35,7 @@ def get_client():
             "Accept": "application/json",
             "Content-Type": "application/json",
         },
+        timeout=None,
     )
 
 
