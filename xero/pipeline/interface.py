@@ -11,4 +11,4 @@ class Pipeline:
     schema: list[dict[str, Any]]
     id_key: str
     params: dict[Any, Any] = field(default_factory=dict)
-    cursor_key: str = "_batched_at"
+    cursor_key: str = "UpdatedDateUTC"
