@@ -1,4 +1,4 @@
-from typing import Callable, Any, Optional
+from typing import Any
 from datetime import datetime
 
 from google.cloud import bigquery
