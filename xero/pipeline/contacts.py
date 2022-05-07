@@ -64,8 +64,8 @@ pipeline = Pipeline(
         {"name": "AccountsPayableTaxType", "type": "STRING"},
         {
             "name": "Addresses",
-            "type": "record",
-            "mode": "repeated",
+            "type": "RECORD",
+            "mode": "REPEATED",
             "fields": [
                 {"name": "AddressType", "type": "STRING"},
                 {"name": "AddressLine1", "type": "STRING"},
@@ -76,8 +76,8 @@ pipeline = Pipeline(
         },
         {
             "name": "Phones",
-            "type": "record",
-            "mode": "repeated",
+            "type": "RECORD",
+            "mode": "REPEATED",
             "fields": [
                 {"name": "PhoneType", "type": "STRING"},
                 {"name": "PhoneNumber", "type": "STRING"},
