@@ -1,4 +1,4 @@
-from xero.pipeline import bank_transactions, contacts, invoices, purchase_orders
+from xero.pipeline import bank_transactions, contacts, invoices, purchase_orders, credit_notes
 
 pipelines = {
     i.name: i
@@ -9,6 +9,7 @@ pipelines = {
             contacts,
             invoices,
             purchase_orders,
+            credit_notes,
         ]
     ]
 }
