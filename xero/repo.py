@@ -13,7 +13,7 @@ def get_client():
         "client_id": os.getenv("XERO_CLIENT_ID"),
         "client_secret": os.getenv("XERO_CLIENT_SECRET"),
     }
-    auth_session = OAuth2Client(
+    with OAuth2Client(
         **auth_info,
         scope=" ".join(
             [
@@ -23,11 +23,11 @@ def get_client():
                 "accounting.transactions.read",
             ]
         ),
-    )
-    token = auth_session.fetch_token(
-        "https://identity.xero.com/connect/token",
-        grant_type="client_credentials",
-    )
+    ) as client:
+        token = client.fetch_token(
+            "https://identity.xero.com/connect/token",
+            grant_type="client_credentials",
+        )
     return OAuth2Client(
         **auth_info,
         token=token,
