@@ -8,6 +8,19 @@ pipeline = Pipeline(
     lambda rows: [
         {
             "Type": row.get("Type"),
+            "InvoiceID": row.get("InvoiceID"),
+            "InvoiceNumber": row.get("InvoiceNumber"),
+            "CreditNotes": [
+                {
+                    "CreditNoteID": credit_note.get("CreditNoteID"),
+                }
+                for credit_note in row["CreditNotes"]
+            ]
+            if row.get("CreditNotes")
+            else {},
+            "AmountDue": row.get("AmountDue"),
+            "AmountPaid": row.get("AmountPaid"),
+            "AmountCredited": row.get("AmountCredited"),
             "Contact": {
                 "ContactID": row["Contact"].get("ContactID"),
             }
@@ -21,7 +34,6 @@ pipeline = Pipeline(
                 {
                     "ItemCode": line_item.get("ItemCode"),
                     "Description": line_item.get("Description"),
-                    "Quantity": line_item.get("Quantity"),
                     "UnitAmount": line_item.get("UnitAmount"),
                     "TaxType": line_item.get("TaxType"),
                     "TaxAmount": line_item.get("TaxAmount"),
@@ -31,7 +43,9 @@ pipeline = Pipeline(
                         "ItemID": line_item["Item"].get("ItemID"),
                         "Name": line_item["Item"].get("Name"),
                         "Code": line_item["Item"].get("Code"),
-                    } if line_item.get('Item') else {},
+                    }
+                    if line_item.get("Item")
+                    else {},
                     "Tracking": [
                         {
                             "TrackingCategoryID": tracking.get("TrackingCategoryID"),
@@ -42,6 +56,7 @@ pipeline = Pipeline(
                     ]
                     if line_item.get("Tracking")
                     else [],
+                    "Quantity": line_item.get("Quantity"),
                     "LineItemID": line_item.get("LineItemID"),
                 }
                 for line_item in row["LineItems"]
@@ -53,20 +68,30 @@ pipeline = Pipeline(
             "Total": row.get("Total"),
             "UpdatedDateUTC": parse_timestamp(row.get("UpdatedDateUTC")),
             "CurrencyCode": row.get("CurrencyCode"),
-            "InvoiceID": row.get("InvoiceID"),
-            "InvoiceNumber": row.get("InvoiceNumber"),
-            "AmountDue": row.get("AmountDue"),
-            "AmountPaid": row.get("AmountPaid"),
-            "AmountCredited": row.get("AmountCredited"),
         }
         for row in rows
     ],
     [
         {"name": "Type", "type": "STRING"},
+        {"name": "InvoiceID", "type": "STRING"},
+        {"name": "InvoiceNumber", "type": "STRING"},
+        {
+            "name": "CreditNotes",
+            "type": "RECORD",
+            "mode": "REPEATED",
+            "fields": [
+                {"name": "CreditNoteID", "type": "STRING"},
+            ],
+        },
+        {"name": "AmountDue", "type": "NUMERIC"},
+        {"name": "AmountPaid", "type": "NUMERIC"},
+        {"name": "AmountCredited", "type": "NUMERIC"},
         {
             "name": "Contact",
             "type": "RECORD",
-            "fields": [{"name": "ContactID", "type": "STRING"},],
+            "fields": [
+                {"name": "ContactID", "type": "STRING"},
+            ],
         },
         {"name": "Date", "type": "STRING"},
         {"name": "DueDate", "type": "STRING"},
@@ -81,7 +106,6 @@ pipeline = Pipeline(
             "fields": [
                 {"name": "ItemCode", "type": "STRING"},
                 {"name": "Description", "type": "STRING"},
-                {"name": "Quantity", "type": "NUMERIC"},
                 {"name": "UnitAmount", "type": "NUMERIC"},
                 {"name": "TaxType", "type": "STRING"},
                 {"name": "TaxAmount", "type": "NUMERIC"},
@@ -106,6 +130,7 @@ pipeline = Pipeline(
                         {"name": "Option", "type": "STRING"},
                     ],
                 },
+                {"name": "Quantity", "type": "NUMERIC"},
                 {"name": "LineItemID", "type": "STRING"},
             ],
         },
@@ -114,11 +139,6 @@ pipeline = Pipeline(
         {"name": "Total", "type": "NUMERIC"},
         {"name": "UpdatedDateUTC", "type": "STRING"},
         {"name": "CurrencyCode", "type": "STRING"},
-        {"name": "InvoiceID", "type": "STRING"},
-        {"name": "InvoiceNumber", "type": "STRING"},
-        {"name": "AmountDue", "type": "NUMERIC"},
-        {"name": "AmountPaid", "type": "NUMERIC"},
-        {"name": "AmountCredited", "type": "NUMERIC"},
     ],
     "InvoiceID",
 )
