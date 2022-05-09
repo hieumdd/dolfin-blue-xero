@@ -30,12 +30,12 @@ pipeline = Pipeline(
             ]
             if row.get("LineItems")
             else [],
-            "SubTotal": row.get('"SubTotal"'),
-            "TotalTax": row.get('"TotalTax"'),
-            "Total": row.get('"Total"'),
-            "UpdatedDateUTC": parse_timestamp(row.get('"UpdatedDateUTC"')),
-            "CurrencyCode": row.get('"CurrencyCode"'),
-            "BankTransactionID": row.get('"BankTransactionID"'),
+            "SubTotal": row.get("SubTotal"),
+            "TotalTax": row.get("TotalTax"),
+            "Total": row.get("Total"),
+            "UpdatedDateUTC": parse_timestamp(row.get("UpdatedDateUTC")),
+            "CurrencyCode": row.get("CurrencyCode"),
+            "BankTransactionID": row.get("BankTransactionID"),
             "BankAccount": {
                 "AccountID": row["BankAccount"].get("AccountID"),
                 "Code": row["BankAccount"].get("Code"),
