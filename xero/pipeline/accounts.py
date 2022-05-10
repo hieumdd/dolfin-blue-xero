@@ -1,12 +1,12 @@
 from xero.pipeline.interface import Pipeline
-from xero.pipeline.utils import parse_timestamp
-from xero.pipeline.headers import timeframe
+from xero.pipeline.headers import dimension
 
 pipeline = Pipeline(
     name="Accounts",
-    headers_fn=timeframe,
+    headers_fn=dimension,
     uri="api.xro/2.0/Accounts",
     res_fn=lambda x: x["Accounts"],
+    paging=False,
     transform=lambda rows: [
         {
             "AccountID": row.get("AccountID"),
@@ -28,5 +28,5 @@ pipeline = Pipeline(
         {"name": "Description", "type": "STRING"},
         {"name": "EnablePaymentsToAccount", "type": "BOOLEAN"},
     ],
-    id_key="AccountID",
+    id_key=None,
 )

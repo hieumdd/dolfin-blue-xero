@@ -13,4 +13,5 @@ class Pipeline:
     schema: list[dict[str, Any]]
     id_key: Optional[str]
     params: dict[Any, Any] = field(default_factory=dict)
+    paging: bool = True
     cursor_key: str = "UpdatedDateUTC"
