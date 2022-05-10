@@ -6,18 +6,6 @@ from authlib.integrations.httpx_client import OAuth2Client
 
 BASE_URL = "https://api.xero.com/"
 
-"accounting.transactions",
-"accounting.settings",
-"accounting.contacts",
-"assets",
-"assets.read",
-"accounting.settings.read",
-"accounting.journals.read",
-"accounting.budgets.read",
-"accounting.reports.read",
-"accounting.transactions.read",
-"accounting.contacts.read",
-
 
 def get_client():
     auth_info = {
@@ -66,7 +54,7 @@ def get_listing(
 ):
     def _get(headers: dict[str, Any]):
         def __get(client: OAuth2Client, page: int = 1):
-            r = client.get(uri, params={**params, "page": page})
+            r = client.get(uri, params={"page": page})
             if r.status_code == 429:
                 time.sleep(2)
                 return __get(client, page)
@@ -79,6 +67,7 @@ def get_listing(
                 )
 
         with get_client() as client:
+            client.params.merge(params)
             client.headers.update(headers)
             return __get(client)
 
