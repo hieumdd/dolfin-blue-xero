@@ -3,6 +3,7 @@ from typing import Union, Optional
 from compose import compose
 
 from xero.pipeline.interface import Pipeline
+from xero.repo import get_listing
 from db.bigquery import load
 
 
@@ -23,6 +24,6 @@ def pipeline_service(
             pipeline.cursor_key,
         ),
         pipeline.transform,
-        pipeline.get,
+        get_listing(pipeline.uri, pipeline.params, pipeline.res_fn),
         pipeline.headers_fn,
     )(start)

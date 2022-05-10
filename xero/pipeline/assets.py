@@ -1,12 +1,12 @@
 from xero.pipeline.interface import Pipeline
-from xero.repo import get_listing
 from xero.pipeline.headers import timeframe
 
 pipeline = Pipeline(
-    "Assets",
-    timeframe,
-    get_listing("assets.xro/1.0/", {}, lambda x: x["items"]),
-    lambda rows: [
+    name="Assets",
+    headers_fn=timeframe,
+    uri="assets.xro/1.0/",
+    res_fn=lambda x: x["items"],
+    transform=lambda rows: [
         {
             "assetId": row.get("assetId"),
             "assetName": row.get("assetName"),
@@ -53,7 +53,7 @@ pipeline = Pipeline(
         }
         for row in rows
     ],
-    [
+    schema=[
         {"name": "assetId", "type": "STRING"},
         {"name": "assetName", "type": "STRING"},
         {"name": "assetNumber", "type": "STRING"},

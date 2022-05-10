@@ -1,13 +1,13 @@
 from xero.pipeline.interface import Pipeline
-from xero.repo import get_listing
 from xero.pipeline.utils import parse_timestamp
 from xero.pipeline.headers import timeframe
 
 pipeline = Pipeline(
-    "CreditNotes",
-    timeframe,
-    get_listing("api.xro/2.0/CreditNotes", {}, lambda x: x["CreditNotes"]),
-    lambda rows: [
+    name="CreditNotes",
+    headers_fn=timeframe,
+    uri="api.xro/2.0/CreditNotes",
+    res_fn=lambda x: x["CreditNotes"],
+    transform=lambda rows: [
         {
             "CreditNoteID": row.get("CreditNoteID"),
             "CreditNoteNumber": row.get("CreditNoteNumber"),
@@ -61,7 +61,7 @@ pipeline = Pipeline(
         }
         for row in rows
     ],
-    [
+    schema=[
         {"name": "CreditNoteID", "type": "STRING"},
         {"name": "CreditNoteNumber", "type": "STRING"},
         {"name": "Type", "type": "STRING"},
@@ -116,5 +116,5 @@ pipeline = Pipeline(
         {"name": "Total", "type": "NUMERIC"},
         {"name": "UpdatedDateUTC", "type": "STRING"},
     ],
-    "CreditNoteID",
+    id_key="CreditNoteID",
 )

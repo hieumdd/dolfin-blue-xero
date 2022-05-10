@@ -1,13 +1,13 @@
 from xero.pipeline.interface import Pipeline
-from xero.repo import get_listing
 from xero.pipeline.utils import parse_timestamp
 from xero.pipeline.headers import timeframe
 
 pipeline = Pipeline(
     "Invoices",
-    timeframe,
-    get_listing("api.xro/2.0/Invoices", {}, lambda x: x["Invoices"]),
-    lambda rows: [
+    headers_fn=timeframe,
+    uri="api.xro/2.0/Invoices",
+    res_fn=lambda x: x["Invoices"],
+    transform=lambda rows: [
         {
             "Type": row.get("Type"),
             "InvoiceID": row.get("InvoiceID"),
@@ -73,7 +73,7 @@ pipeline = Pipeline(
         }
         for row in rows
     ],
-    [
+    schema=[
         {"name": "Type", "type": "STRING"},
         {"name": "InvoiceID", "type": "STRING"},
         {"name": "InvoiceNumber", "type": "STRING"},
@@ -142,5 +142,5 @@ pipeline = Pipeline(
         {"name": "UpdatedDateUTC", "type": "STRING"},
         {"name": "CurrencyCode", "type": "STRING"},
     ],
-    "InvoiceID",
+    id_key="InvoiceID",
 )

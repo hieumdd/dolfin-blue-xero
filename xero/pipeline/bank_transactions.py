@@ -1,13 +1,13 @@
 from xero.pipeline.interface import Pipeline
-from xero.repo import get_listing
 from xero.pipeline.utils import parse_timestamp
 from xero.pipeline.headers import timeframe
 
 pipeline = Pipeline(
-    "BankTransactions",
-    timeframe,
-    get_listing("api.xro/2.0/BankTransactions", {}, lambda x: x["BankTransactions"]),
-    lambda rows: [
+    name="BankTransactions",
+    headers_fn=timeframe,
+    uri="api.xro/2.0/BankTransactions",
+    res_fn=lambda x: x["BankTransactions"],
+    transform=lambda rows: [
         {
             "Contact": {
                 "ContactID": row["Contact"].get("ContactID"),
@@ -67,7 +67,7 @@ pipeline = Pipeline(
         }
         for row in rows
     ],
-    [
+    schema=[
         {
             "name": "Contact",
             "type": "RECORD",

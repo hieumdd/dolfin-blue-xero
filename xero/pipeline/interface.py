@@ -1,5 +1,5 @@
 from typing import Any, Callable, Optional
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 Data = list[dict[str, Any]]
 
@@ -7,8 +7,10 @@ Data = list[dict[str, Any]]
 class Pipeline:
     name: str
     headers_fn: Callable[[Any], dict[Any, Any]]
-    get: Callable[[Any], Data]
+    uri: str
+    res_fn: Callable[[dict[str, Any]], Data]
     transform: Callable[[Data], Data]
     schema: list[dict[str, Any]]
     id_key: Optional[str]
+    params: dict[Any, Any] = field(default_factory=dict)
     cursor_key: str = "UpdatedDateUTC"

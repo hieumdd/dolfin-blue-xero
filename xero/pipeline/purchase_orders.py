@@ -4,10 +4,11 @@ from xero.pipeline.utils import parse_timestamp
 from xero.pipeline.headers import timeframe
 
 pipeline = Pipeline(
-    "PurchaseOrders",
-    timeframe,
-    get_listing("api.xro/2.0/PurchaseOrders", {}, lambda x: x["PurchaseOrders"]),
-    lambda rows: [
+    name="PurchaseOrders",
+    headers_fn=timeframe,
+    uri="api.xro/2.0/PurchaseOrders",
+    res_fn=lambda x: x["PurchaseOrders"],
+    transform=lambda rows: [
         {
             "PurchaseOrderID": row.get("PurchaseOrderID"),
             "PurchaseOrderNumber": row.get("PurchaseOrderNumber"),
@@ -47,7 +48,7 @@ pipeline = Pipeline(
         }
         for row in rows
     ],
-    [
+    schema=[
         {"name": "PurchaseOrderID", "type": "STRING"},
         {"name": "PurchaseOrderNumber", "type": "STRING"},
         {"name": "DateString", "type": "TIMESTAMP"},
