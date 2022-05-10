@@ -5,7 +5,7 @@ import time
 
 from authlib.integrations.httpx_client import OAuth2Client
 
-BASE_URL = "https://api.xero.com/api.xro/2.0/"
+BASE_URL = "https://api.xero.com/"
 
 
 def get_client():

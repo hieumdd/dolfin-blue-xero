@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 from datetime import datetime
 
 from google.cloud import bigquery
@@ -15,7 +15,7 @@ def get_last_timestamp(table: str, cursor_key: str) -> datetime:
     return [row for row in rows][0]["incre"]
 
 
-def load(table: str, schema: list[dict[str, Any]], id_key: str, cursor_key: str):
+def load(table: str, schema: list[dict[str, Any]], id_key: Optional[str], cursor_key: str):
     def _load(data: list[dict[str, Any]]) -> int:
         if len(data) == 0:
             return 0
@@ -26,14 +26,15 @@ def load(table: str, schema: list[dict[str, Any]], id_key: str, cursor_key: str)
                 f"{DATASET}.{table}",
                 job_config=bigquery.LoadJobConfig(
                     create_disposition="CREATE_IF_NEEDED",
-                    write_disposition="WRITE_TRUNCATE",
+                    write_disposition="WRITE_TRUNCATE" if not id_key else "WRITE_APPEND",
                     schema=schema,
                 ),
             )
             .result()
             .output_rows
         )
-        update(table, id_key, cursor_key)
+        if id_key:
+            update(table, id_key, cursor_key)
         return output_rows
 
     return _load

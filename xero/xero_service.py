@@ -1,21 +1,10 @@
 from typing import Union, Optional
-from datetime import datetime
 
 from compose import compose
 
 from xero.pipeline.interface import Pipeline
 from xero.repo import get_listing
-from db.bigquery import get_last_timestamp, load
-
-
-def _get_timeframe_service(pipeline: Pipeline):
-    def _svc(start: Optional[str]) -> datetime:
-        return (
-            get_last_timestamp(pipeline.name, pipeline.cursor_key)
-            if not start
-            else datetime.strptime(start, "%Y-%m-%d")
-        )
-    return _svc
+from db.bigquery import load
 
 
 def pipeline_service(
@@ -36,5 +25,5 @@ def pipeline_service(
         ),
         pipeline.transform,
         get_listing(pipeline.uri, pipeline.params, pipeline.res_fn),
-        _get_timeframe_service(pipeline),
+        pipeline.headers_fn,
     )(start)

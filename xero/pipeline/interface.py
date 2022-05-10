@@ -1,14 +1,16 @@
-from typing import Any, Callable
+from typing import Any, Callable, Optional
 from dataclasses import dataclass, field
 
+Data = list[dict[str, Any]]
 
 @dataclass
 class Pipeline:
     name: str
+    headers_fn: Callable[[Any], dict[Any, Any]]
     uri: str
-    res_fn: Callable[[dict[str, Any]], list[dict[str, Any]]]
-    transform: Callable[[list[dict[str, Any]]], list[dict[str, Any]]]
+    res_fn: Callable[[dict[str, Any]], Data]
+    transform: Callable[[Data], Data]
     schema: list[dict[str, Any]]
-    id_key: str
+    id_key: Optional[str]
     params: dict[Any, Any] = field(default_factory=dict)
     cursor_key: str = "UpdatedDateUTC"
