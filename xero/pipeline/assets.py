@@ -1,10 +1,13 @@
 from xero.pipeline.interface import Pipeline
 from xero.pipeline.headers import timeframe
 
-pipeline = Pipeline(
+pipeline = lambda status: Pipeline(
     name="Assets",
     headers_fn=timeframe,
     uri="assets.xro/1.0/",
+    params={
+        "status": status
+    },
     res_fn=lambda x: x["items"],
     transform=lambda rows: [
         {
