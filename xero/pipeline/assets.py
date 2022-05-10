@@ -2,9 +2,9 @@ from xero.pipeline.interface import Pipeline
 from xero.pipeline.headers import timeframe
 
 pipeline = lambda status: Pipeline(
-    name="Assets",
+    name=f"Assets_{status}",
     headers_fn=timeframe,
-    uri="assets.xro/1.0/",
+    uri="assets.xro/1.0/Assets",
     params={
         "status": status
     },
@@ -50,7 +50,7 @@ pipeline = lambda status: Pipeline(
                 "currentAccumDepreciationAmount": row["bookDepreciationDetail"].get(
                     "currentAccumDepreciationAmount"
                 ),
-            },
+            } if row.get("bookDepreciationDetail") else {},
             "canRollback": row.get("canRollback"),
             "accountingBookValue": row.get("accountingBookValue"),
         }

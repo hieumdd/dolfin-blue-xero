@@ -6,6 +6,18 @@ from authlib.integrations.httpx_client import OAuth2Client
 
 BASE_URL = "https://api.xero.com/"
 
+"accounting.transactions",
+"accounting.settings",
+"accounting.contacts",
+"assets",
+"assets.read",
+"accounting.settings.read",
+"accounting.journals.read",
+"accounting.budgets.read",
+"accounting.reports.read",
+"accounting.transactions.read",
+"accounting.contacts.read",
+
 
 def get_client():
     auth_info = {
@@ -16,20 +28,17 @@ def get_client():
         **auth_info,
         scope=" ".join(
             [
-                "payroll.employees.read",
-                "accounting.contacts.read",
-                "payroll.payruns.read",
-                "files.read",
-                "accounting.transactions.read",
-                "accounting.reports.read",
-                "accounting.budgets.read",
-                "accounting.journals.read",
-                "accounting.settings.read",
+                "accounting.transactions",
+                "accounting.settings",
+                "accounting.contacts",
+                "assets",
                 "assets.read",
-                "projects.read",
-                "payroll.timesheets.read",
-                "payroll.settings.read",
-                "payroll.payslip.read",
+                "accounting.settings.read",
+                "accounting.journals.read",
+                "accounting.budgets.read",
+                "accounting.reports.read",
+                "accounting.transactions.read",
+                "accounting.contacts.read",
             ]
         ),
     ) as client:
