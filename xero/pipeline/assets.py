@@ -5,9 +5,7 @@ pipeline = lambda status: Pipeline(
     name=f"Assets_{status}",
     headers_fn=timeframe,
     uri="assets.xro/1.0/Assets",
-    params={
-        "status": status
-    },
+    params={"status": status},
     res_fn=lambda x: x["items"],
     transform=lambda rows: [
         {
@@ -50,7 +48,9 @@ pipeline = lambda status: Pipeline(
                 "currentAccumDepreciationAmount": row["bookDepreciationDetail"].get(
                     "currentAccumDepreciationAmount"
                 ),
-            } if row.get("bookDepreciationDetail") else {},
+            }
+            if row.get("bookDepreciationDetail")
+            else {},
             "canRollback": row.get("canRollback"),
             "accountingBookValue": row.get("accountingBookValue"),
         }

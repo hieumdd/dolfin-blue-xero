@@ -15,7 +15,12 @@ def get_last_timestamp(table: str, cursor_key: str) -> datetime:
     return [row for row in rows][0]["incre"]
 
 
-def load(table: str, schema: list[dict[str, Any]], id_key: Optional[str], cursor_key: str):
+def load(
+    table: str,
+    schema: list[dict[str, Any]],
+    id_key: Optional[str],
+    cursor_key: str,
+):
     def _load(data: list[dict[str, Any]]) -> int:
         if len(data) == 0:
             return 0
@@ -26,7 +31,9 @@ def load(table: str, schema: list[dict[str, Any]], id_key: Optional[str], cursor
                 f"{DATASET}.{table}",
                 job_config=bigquery.LoadJobConfig(
                     create_disposition="CREATE_IF_NEEDED",
-                    write_disposition="WRITE_TRUNCATE" if not id_key else "WRITE_APPEND",
+                    write_disposition="WRITE_TRUNCATE"
+                    if not id_key
+                    else "WRITE_APPEND",
                     schema=schema,
                 ),
             )

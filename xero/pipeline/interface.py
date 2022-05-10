@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 
 Data = list[dict[str, Any]]
 
+
 @dataclass
 class Pipeline:
     name: str
