@@ -1,10 +1,12 @@
 from xero.pipeline.interface import Pipeline
+from xero.repo import get_listing
 from xero.pipeline.utils import parse_timestamp
+from xero.pipeline.headers_builder import timeframe
 
 pipeline = Pipeline(
     "BankTransactions",
-    "BankTransactions",
-    lambda x: x["BankTransactions"],
+    timeframe,
+    get_listing("api.xro/2.0/BankTransactions", {}, lambda x: x["BankTransactions"]),
     lambda rows: [
         {
             "Contact": {
@@ -30,12 +32,12 @@ pipeline = Pipeline(
             ]
             if row.get("LineItems")
             else [],
-            "SubTotal": row.get('"SubTotal"'),
-            "TotalTax": row.get('"TotalTax"'),
+            "SubTotal": row.get('SubTotal'),
+            "TotalTax": row.get('TotalTax'),
             "Total": row.get('"Total"'),
-            "UpdatedDateUTC": parse_timestamp(row.get('"UpdatedDateUTC"')),
-            "CurrencyCode": row.get('"CurrencyCode"'),
-            "BankTransactionID": row.get('"BankTransactionID"'),
+            "UpdatedDateUTC": parse_timestamp(row.get('UpdatedDateUTC')),
+            "CurrencyCode": row.get('CurrencyCode'),
+            "BankTransactionID": row.get('BankTransactionID'),
             "BankAccount": {
                 "AccountID": row["BankAccount"].get("AccountID"),
                 "Code": row["BankAccount"].get("Code"),

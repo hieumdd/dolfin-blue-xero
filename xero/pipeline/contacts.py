@@ -1,10 +1,12 @@
 from xero.pipeline.interface import Pipeline
+from xero.repo import get_listing
 from xero.pipeline.utils import parse_timestamp
+from xero.pipeline.headers_builder import timeframe
 
 pipeline = Pipeline(
     "Contacts",
-    "Contacts",
-    lambda x: x["Contacts"],
+    timeframe,
+    get_listing("api.xro/2.0/Contacts",{}, lambda x: x["Contacts"]),
     lambda rows: [
         {
             "ContactID": row.get("ContactID"),
