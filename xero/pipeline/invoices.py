@@ -95,8 +95,6 @@ pipeline = Pipeline(
                 {"name": "ContactID", "type": "STRING"},
             ],
         },
-        {"name": "Date", "type": "STRING"},
-        {"name": "DueDate", "type": "STRING"},
         {"name": "DateString", "type": "TIMESTAMP"},
         {"name": "DueDateString", "type": "TIMESTAMP"},
         {"name": "Status", "type": "STRING"},
