@@ -2,6 +2,7 @@ from xero.pipeline import (
     accounts,
     assets,
     bank_transactions,
+    budgets,
     contacts,
     invoices,
     purchase_orders,
@@ -15,6 +16,7 @@ pipelines = {
         for j in [
             accounts,
             bank_transactions,
+            budgets,
             contacts,
             invoices,
             purchase_orders,
