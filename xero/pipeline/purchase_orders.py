@@ -1,5 +1,4 @@
 from xero.pipeline.interface import Pipeline
-from xero.repo import get_listing
 from xero.pipeline.utils import parse_timestamp
 from xero.pipeline.headers import timeframe
 
