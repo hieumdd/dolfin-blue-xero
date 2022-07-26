@@ -114,7 +114,7 @@ pipeline = Pipeline(
         {"name": "SubTotal", "type": "NUMERIC"},
         {"name": "TotalTax", "type": "NUMERIC"},
         {"name": "Total", "type": "NUMERIC"},
-        {"name": "UpdatedDateUTC", "type": "STRING"},
+        {"name": "UpdatedDateUTC", "type": "TIMESTAMP"},
     ],
     id_key="CreditNoteID",
 )

@@ -137,7 +137,7 @@ pipeline = Pipeline(
         {"name": "SubTotal", "type": "NUMERIC"},
         {"name": "TotalTax", "type": "NUMERIC"},
         {"name": "Total", "type": "NUMERIC"},
-        {"name": "UpdatedDateUTC", "type": "STRING"},
+        {"name": "UpdatedDateUTC", "type": "TIMESTAMP"},
         {"name": "CurrencyCode", "type": "STRING"},
     ],
     id_key="InvoiceID",
