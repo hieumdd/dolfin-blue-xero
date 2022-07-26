@@ -65,4 +65,5 @@ pipeline = Pipeline(
         },
     ],
     id_key="JournalID",
+    cursor_key="CreatedDateUTC",
 )

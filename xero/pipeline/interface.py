@@ -1,9 +1,12 @@
 from typing import Any, Callable, Optional
 from dataclasses import dataclass, field
 
-from xero.pipeline.offset_fn import page_offset
-
 Data = list[dict[str, Any]]
+
+
+def page_offset(offset: dict, _: list[dict]):
+    page = offset.get("page", 1)
+    return {"page": page + 1}
 
 
 @dataclass
