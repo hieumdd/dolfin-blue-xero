@@ -3,10 +3,11 @@ from xero.pipeline.utils import parse_timestamp
 from xero.pipeline.headers import timeframe
 
 pipeline = Pipeline(
-    "Invoices",
+    "ExpenseClaims",
     headers_fn=timeframe,
-    uri="api.xro/2.0/Invoices",
-    res_fn=lambda x: x["Invoices"],
+    uri="api.xro/2.0/ExpenseClaims",
+    res_fn=lambda x: x["ExpenseClaims"],
+    paging=False,
     transform=lambda rows: [
         {
             "Type": row.get("Type"),
@@ -19,6 +20,14 @@ pipeline = Pipeline(
                 for credit_note in row["CreditNotes"]
             ]
             if row.get("CreditNotes")
+            else {},
+            "Payments": [
+                {
+                    "PaymentID": payment.get("PaymentID"),
+                }
+                for payment in row["Payments"]
+            ]
+            if row.get("Payments")
             else {},
             "AmountDue": row.get("AmountDue"),
             "AmountPaid": row.get("AmountPaid"),
@@ -83,6 +92,14 @@ pipeline = Pipeline(
             "mode": "REPEATED",
             "fields": [
                 {"name": "CreditNoteID", "type": "STRING"},
+            ],
+        },
+        {
+            "name": "Payments",
+            "type": "RECORD",
+            "mode": "REPEATED",
+            "fields": [
+                {"name": "PaymentID", "type": "STRING"},
             ],
         },
         {"name": "AmountDue", "type": "NUMERIC"},

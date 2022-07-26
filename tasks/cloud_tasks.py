@@ -7,7 +7,7 @@ from google.cloud import tasks_v2
 from google import auth
 
 _, PROJECT_ID = auth.default()
-CLOUD_TASKS_PATH = (PROJECT_ID, "us-central1", "callio")
+CLOUD_TASKS_PATH = (PROJECT_ID, "us-central1", "xero")
 
 
 def create_tasks(

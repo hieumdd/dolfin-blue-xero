@@ -6,5 +6,4 @@ def xero_controller(body: dict[str, str]):
     return xero_service.pipeline_service(
         pipelines[body.get("table", "")],
         body.get("start"),
-        body.get("end"),
     )

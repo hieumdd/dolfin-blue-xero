@@ -1,21 +1,30 @@
-from typing import Callable, Any, Optional
+from typing import Any, Optional
 from datetime import datetime
 
 from google.cloud import bigquery
 
 BQ_CLIENT = bigquery.Client()
 
-DATASET = "Callio"
+DATASET = "Xero__RobotZebra"
 
 
-def get_last_timestamp(table: str, cursor_key: str) -> datetime:
-    rows = BQ_CLIENT.query(
-        f"SELECT MAX({cursor_key}) AS incre FROM {DATASET}.{table}"
-    ).result()
-    return [row for row in rows][0]["incre"]
+def get_last_timestamp(table: str, cursor_key: str) -> str:
+    try:
+        rows = BQ_CLIENT.query(
+            f"SELECT MAX({cursor_key}) AS incre FROM {DATASET}.{table}"
+        ).result()
+        date = [row for row in rows][0]["incre"]
+        return date if type(date) == str else date.isoformat(timespec="seconds")
+    except:
+        return datetime(2010, 1, 1).isoformat(timespec="seconds")
 
 
-def load(table: str, schema: list[dict[str, Any]], id_key: str, cursor_key: str):
+def load(
+    table: str,
+    schema: list[dict[str, Any]],
+    id_key: Optional[str],
+    cursor_key: str,
+):
     def _load(data: list[dict[str, Any]]) -> int:
         if len(data) == 0:
             return 0
@@ -26,14 +35,17 @@ def load(table: str, schema: list[dict[str, Any]], id_key: str, cursor_key: str)
                 f"{DATASET}.{table}",
                 job_config=bigquery.LoadJobConfig(
                     create_disposition="CREATE_IF_NEEDED",
-                    write_disposition="WRITE_TRUNCATE",
+                    write_disposition="WRITE_TRUNCATE"
+                    if not id_key
+                    else "WRITE_APPEND",
                     schema=schema,
                 ),
             )
             .result()
             .output_rows
         )
-        update(table, id_key, cursor_key)
+        if id_key:
+            update(table, id_key, cursor_key)
         return output_rows
 
     return _load

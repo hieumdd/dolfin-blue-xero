@@ -3,33 +3,22 @@ from xero.pipeline.utils import parse_timestamp
 from xero.pipeline.headers import timeframe
 
 pipeline = Pipeline(
-    "Invoices",
+    name="CreditNotes",
     headers_fn=timeframe,
-    uri="api.xro/2.0/Invoices",
-    res_fn=lambda x: x["Invoices"],
+    uri="api.xro/2.0/CreditNotes",
+    res_fn=lambda x: x["CreditNotes"],
     transform=lambda rows: [
         {
+            "CreditNoteID": row.get("CreditNoteID"),
+            "CreditNoteNumber": row.get("CreditNoteNumber"),
             "Type": row.get("Type"),
-            "InvoiceID": row.get("InvoiceID"),
-            "InvoiceNumber": row.get("InvoiceNumber"),
-            "CreditNotes": [
-                {
-                    "CreditNoteID": credit_note.get("CreditNoteID"),
-                }
-                for credit_note in row["CreditNotes"]
-            ]
-            if row.get("CreditNotes")
-            else {},
-            "AmountDue": row.get("AmountDue"),
-            "AmountPaid": row.get("AmountPaid"),
-            "AmountCredited": row.get("AmountCredited"),
+            "RemainingCredit": row.get("RemainingCredit"),
             "Contact": {
                 "ContactID": row["Contact"].get("ContactID"),
             }
             if row.get("Contact")
             else {},
             "DateString": row.get("DateString"),
-            "DueDateString": row.get("DueDateString"),
             "Status": row.get("Status"),
             "LineAmountTypes": row.get("LineAmountTypes"),
             "LineItems": [
@@ -69,25 +58,14 @@ pipeline = Pipeline(
             "TotalTax": row.get("TotalTax"),
             "Total": row.get("Total"),
             "UpdatedDateUTC": parse_timestamp(row.get("UpdatedDateUTC")),
-            "CurrencyCode": row.get("CurrencyCode"),
         }
         for row in rows
     ],
     schema=[
+        {"name": "CreditNoteID", "type": "STRING"},
+        {"name": "CreditNoteNumber", "type": "STRING"},
         {"name": "Type", "type": "STRING"},
-        {"name": "InvoiceID", "type": "STRING"},
-        {"name": "InvoiceNumber", "type": "STRING"},
-        {
-            "name": "CreditNotes",
-            "type": "RECORD",
-            "mode": "REPEATED",
-            "fields": [
-                {"name": "CreditNoteID", "type": "STRING"},
-            ],
-        },
-        {"name": "AmountDue", "type": "NUMERIC"},
-        {"name": "AmountPaid", "type": "NUMERIC"},
-        {"name": "AmountCredited", "type": "NUMERIC"},
+        {"name": "RemainingCredit", "type": "NUMERIC"},
         {
             "name": "Contact",
             "type": "RECORD",
@@ -96,7 +74,6 @@ pipeline = Pipeline(
             ],
         },
         {"name": "DateString", "type": "TIMESTAMP"},
-        {"name": "DueDateString", "type": "TIMESTAMP"},
         {"name": "Status", "type": "STRING"},
         {"name": "LineAmountTypes", "type": "STRING"},
         {
@@ -138,7 +115,6 @@ pipeline = Pipeline(
         {"name": "TotalTax", "type": "NUMERIC"},
         {"name": "Total", "type": "NUMERIC"},
         {"name": "UpdatedDateUTC", "type": "TIMESTAMP"},
-        {"name": "CurrencyCode", "type": "STRING"},
     ],
-    id_key="InvoiceID",
+    id_key="CreditNoteID",
 )

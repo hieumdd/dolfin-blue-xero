@@ -10,13 +10,11 @@ from db.bigquery import load
 def pipeline_service(
     pipeline: Pipeline,
     start: Optional[str],
-    end: Optional[str],
 ) -> dict[str, Union[str, int]]:
     return compose(
         lambda x: {
             "table": pipeline.name,
             "start": start,
-            "end": end,
             "output_rows": x,
         },
         load(
@@ -26,5 +24,12 @@ def pipeline_service(
             pipeline.cursor_key,
         ),
         pipeline.transform,
-        get_listing(pipeline.uri, pipeline.params, pipeline.res_fn)
-    )((start, end))
+        get_listing(
+            pipeline.uri,
+            pipeline.params,
+            pipeline.res_fn,
+            pipeline.offset_fn,
+            pipeline.paging,
+        ),
+        pipeline.headers_fn(pipeline),
+    )(start)

@@ -1,11 +1,13 @@
 from xero.pipeline.interface import Pipeline
 from xero.pipeline.utils import parse_timestamp
+from xero.pipeline.headers import timeframe
 
 pipeline = Pipeline(
-    "BankTransactions",
-    "BankTransactions",
-    lambda x: x["BankTransactions"],
-    lambda rows: [
+    name="BankTransactions",
+    headers_fn=timeframe,
+    uri="api.xro/2.0/BankTransactions",
+    res_fn=lambda x: x["BankTransactions"],
+    transform=lambda rows: [
         {
             "Contact": {
                 "ContactID": row["Contact"].get("ContactID"),
@@ -30,12 +32,12 @@ pipeline = Pipeline(
             ]
             if row.get("LineItems")
             else [],
-            "SubTotal": row.get('"SubTotal"'),
-            "TotalTax": row.get('"TotalTax"'),
+            "SubTotal": row.get("SubTotal"),
+            "TotalTax": row.get("TotalTax"),
             "Total": row.get('"Total"'),
-            "UpdatedDateUTC": parse_timestamp(row.get('"UpdatedDateUTC"')),
-            "CurrencyCode": row.get('"CurrencyCode"'),
-            "BankTransactionID": row.get('"BankTransactionID"'),
+            "UpdatedDateUTC": parse_timestamp(row.get("UpdatedDateUTC")),
+            "CurrencyCode": row.get("CurrencyCode"),
+            "BankTransactionID": row.get("BankTransactionID"),
             "BankAccount": {
                 "AccountID": row["BankAccount"].get("AccountID"),
                 "Code": row["BankAccount"].get("Code"),
@@ -65,10 +67,10 @@ pipeline = Pipeline(
         }
         for row in rows
     ],
-    [
+    schema=[
         {
             "name": "Contact",
-            "type": "record",
+            "type": "RECORD",
             "fields": [
                 {"name": "ContactID", "type": "STRING"},
             ],
@@ -78,28 +80,28 @@ pipeline = Pipeline(
         {"name": "LineAmountTypes", "type": "STRING"},
         {
             "name": "LineItems",
-            "type": "record",
-            "mode": "repeated",
+            "type": "RECORD",
+            "mode": "REPEATED",
             "fields": [
                 {"name": "Description", "type": "STRING"},
-                {"name": "UnitAmount", "type": "STRING"},
+                {"name": "UnitAmount", "type": "NUMERIC"},
                 {"name": "TaxType", "type": "STRING"},
-                {"name": "TaxAmount", "type": "STRING"},
-                {"name": "LineAmount", "type": "STRING"},
+                {"name": "TaxAmount", "type": "NUMERIC"},
+                {"name": "LineAmount", "type": "NUMERIC"},
                 {"name": "AccountCode", "type": "STRING"},
-                {"name": "Quantity", "type": "STRING"},
+                {"name": "Quantity", "type": "NUMERIC"},
                 {"name": "LineItemID", "type": "STRING"},
             ],
         },
-        {"name": "SubTotal", "type": "STRING"},
-        {"name": "TotalTax", "type": "STRING"},
-        {"name": "Total", "type": "STRING"},
+        {"name": "SubTotal", "type": "NUMERIC"},
+        {"name": "TotalTax", "type": "NUMERIC"},
+        {"name": "Total", "type": "NUMERIC"},
         {"name": "UpdatedDateUTC", "type": "TIMESTAMP"},
         {"name": "CurrencyCode", "type": "STRING"},
         {"name": "BankTransactionID", "type": "STRING"},
         {
             "name": "BankAccount",
-            "type": "record",
+            "type": "RECORD",
             "fields": [
                 {"name": "AccountID", "type": "STRING"},
                 {"name": "Code", "type": "STRING"},
@@ -108,11 +110,11 @@ pipeline = Pipeline(
         },
         {
             "name": "BatchPayment",
-            "type": "record",
+            "type": "RECORD",
             "fields": [
                 {
                     "name": "Account",
-                    "type": "record",
+                    "type": "RECORD",
                     "fields": [
                         {"name": "AccountID", "type": "STRING"},
                     ],
@@ -121,7 +123,7 @@ pipeline = Pipeline(
                 {"name": "Date", "type": "STRING"},
                 {"name": "Type", "type": "STRING"},
                 {"name": "Status", "type": "STRING"},
-                {"name": "TotalAmount", "type": "STRING"},
+                {"name": "TotalAmount", "type": "NUMERIC"},
                 {"name": "UpdatedDateUTC", "type": "STRING"},
                 {"name": "IsReconciled", "type": "STRING"},
             ],
