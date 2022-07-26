@@ -24,6 +24,12 @@ def pipeline_service(
             pipeline.cursor_key,
         ),
         pipeline.transform,
-        get_listing(pipeline.uri, pipeline.params, pipeline.res_fn, pipeline.paging),
+        get_listing(
+            pipeline.uri,
+            pipeline.params,
+            pipeline.res_fn,
+            pipeline.offset_fn,
+            pipeline.paging,
+        ),
         pipeline.headers_fn(pipeline),
     )(start)

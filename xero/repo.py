@@ -52,21 +52,25 @@ def get_client():
 def get_listing(
     uri: str,
     params: dict[str, Any],
-    res_fn: Callable[[dict[str, Any]], list[dict[str, Any]]],
+    res_fn: Callable[[dict], list[dict]],
+    offset_fn: Callable[[dict, list[dict]], dict],
     paging: bool,
 ):
-    def _get(headers: dict[str, Any]):
-        def __get(client: OAuth2Client, page: int = 1):
-            r = client.get(uri, params={**params, "page": page})
+    def _get(headers: dict):
+        def __get(client: OAuth2Client, offset: dict = {"page": 1}):
+            r = client.get(uri, params={**params, **offset})
             if r.status_code == 429:
                 time.sleep(2)
-                return __get(client, page)
+                return __get(client, offset)
             else:
                 r.raise_for_status()
                 res = r.json()
                 data = res_fn(res)
+
                 return (
-                    data if not data or not paging else data + __get(client, page + 1)
+                    data
+                    if not data or not paging
+                    else data + __get(client, offset_fn(offset, data))
                 )
 
         with get_client() as client:

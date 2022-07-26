@@ -8,6 +8,7 @@ from xero.pipeline import (
     invoices,
     purchase_orders,
     credit_notes,
+    journals,
 )
 
 pipelines = {
@@ -23,6 +24,7 @@ pipelines = {
             invoices,
             purchase_orders,
             credit_notes,
+            journals,
         ]
     ]
     + [
