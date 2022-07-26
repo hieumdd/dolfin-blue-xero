@@ -5,8 +5,8 @@ from xero import xero_service
 from tasks import tasks_service
 
 TIME_FRAME = [
-    # ("auto", None),
-    ("manual", "2010-01-01"),
+    ("auto", None),
+    # ("manual", "2010-01-01"),
 ]
 
 

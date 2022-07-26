@@ -5,14 +5,18 @@ from google.cloud import bigquery
 
 BQ_CLIENT = bigquery.Client()
 
-DATASET = "Xero"
+DATASET = "Xero__RobotZebra"
 
 
-def get_last_timestamp(table: str, cursor_key: str) -> datetime:
-    rows = BQ_CLIENT.query(
-        f"SELECT MAX({cursor_key}) AS incre FROM {DATASET}.{table}"
-    ).result()
-    return [row for row in rows][0]["incre"]
+def get_last_timestamp(table: str, cursor_key: str) -> str:
+    try:
+        rows = BQ_CLIENT.query(
+            f"SELECT MAX({cursor_key}) AS incre FROM {DATASET}.{table}"
+        ).result()
+        date = [row for row in rows][0]["incre"]
+        return date if type(date) == str else date.isoformat(timespec="seconds")
+    except:
+        return datetime(2010, 1, 1).isoformat(timespec="seconds")
 
 
 def load(
