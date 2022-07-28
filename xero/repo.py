@@ -57,7 +57,7 @@ def get_listing(
     paging: bool,
 ):
     def _get(headers: dict):
-        def __get(client: OAuth2Client, offset: dict = {}):
+        def __get(client: OAuth2Client, offset: dict = {"page": 1}):
             r = client.get(uri, params={**params, **offset})
             if r.status_code == 429:
                 time.sleep(2)
