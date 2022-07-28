@@ -35,17 +35,18 @@ def load(
                 f"{DATASET}.{table}",
                 job_config=bigquery.LoadJobConfig(
                     create_disposition="CREATE_IF_NEEDED",
-                    write_disposition="WRITE_TRUNCATE"
-                    if not id_key
-                    else "WRITE_APPEND",
+                    write_disposition="WRITE_TRUNCATE",
+                    # write_disposition="WRITE_TRUNCATE"
+                    # if not id_key
+                    # else "WRITE_APPEND",
                     schema=schema,
                 ),
             )
             .result()
             .output_rows
         )
-        if id_key:
-            update(table, id_key, cursor_key)
+        # if id_key:
+        #     update(table, id_key, cursor_key)
         return output_rows
 
     return _load
